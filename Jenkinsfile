@@ -39,3 +39,20 @@ pipeline {
         }
     }
 }
+
+post {
+
+    success {
+        emailext(
+            subject: 'Playwright Execution Passed',
+            body: 'All tests passed'
+        )
+    }
+
+    failure {
+        emailext(
+            subject: 'Playwright Execution Failed',
+            body: 'Please check Jenkins report'
+        )
+    }
+}
