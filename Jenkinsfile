@@ -40,21 +40,62 @@
 //     }
 // }
 
+// pipeline {
+//     agent any
+
+//     stages {
+//         stage('Debug') {
+//             steps {
+//                 sh 'pwd'
+//                 sh 'echo PATH=$PATH'
+//                 sh 'ls -l /usr/local/bin/node || true'
+//                 sh '/usr/local/bin/node -v'
+//                 sh '/usr/local/bin/npm -v'
+//             }
+//         }
+//     }
+// }
+
+
 pipeline {
     agent any
 
+    environment {
+        PATH = "/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin"
+    }
+
     stages {
-        stage('Debug') {
+
+        stage('Verify Environment') {
             steps {
-                sh 'pwd'
-                sh 'echo PATH=$PATH'
-                sh 'ls -l /usr/local/bin/node || true'
-                sh '/usr/local/bin/node -v'
-                sh '/usr/local/bin/npm -v'
+                sh 'echo $PATH'
+                sh 'which node'
+                sh 'which npm'
+                sh 'node -v'
+                sh 'npm -v'
+            }
+        }
+
+        stage('Install Dependencies') {
+            steps {
+                sh 'npm install'
+            }
+        }
+
+        stage('Install Browsers') {
+            steps {
+                sh 'npx playwright install'
+            }
+        }
+
+        stage('Run Tests') {
+            steps {
+                sh 'npx playwright test'
             }
         }
     }
 }
+
 
 post {
 
