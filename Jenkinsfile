@@ -1,77 +1,21 @@
 
 
-
-pipeline {
-
-    agent any
-
-    stages {
-
-        stage('Checkout') {
-            steps {
-                checkout scm
-            }
-        }
-
-        stage('Verify Node') {
-            steps {
-                sh 'node -v'
-                sh 'npm -v'
-            }
-        }
-
-        stage('Install Dependencies') {
-            steps {
-                sh 'npm install'
-            }
-        }
-
-        stage('Install Browsers') {
-            steps {
-                sh 'npx playwright install'
-            }
-        }
-
-        stage('Run Tests') {
-            steps {
-                sh 'npx playwright test'
-            }
-        }
-    }
-}
-
-
 pipeline {
     agent any
 
     environment {
-        PATH = "/opt/homebrew/bin:${env.PATH}"
+        PATH = "/usr/local/bin:/opt/homebrew/bin:/usr/bin:/bin:/usr/sbin:/sbin"
     }
 
     stages {
 
-        stage('Verify Node') {
+        stage('Verify Environment') {
             steps {
+                sh 'echo $PATH'
+                sh 'which node'
+                sh 'which npm'
                 sh 'node -v'
                 sh 'npm -v'
-            }
-        }
-
-        stage('Install Dependencies') {
-            steps {
-                sh 'npm install'
-            }
-        }
-
-        stage('Install Browsers') {
-            steps {
-                sh 'npx playwright install'
-            }
-        }
-
-        stage('Run Tests') {
-            steps {
-                sh 'npx playwright test'
             }
         }
     }
