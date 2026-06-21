@@ -1,21 +1,40 @@
 
 
-pipeline {
-    agent any
 
-    environment {
-        PATH = "/usr/local/bin:/opt/homebrew/bin:/usr/bin:/bin:/usr/sbin:/sbin"
-    }
+pipeline {
+
+    agent any
 
     stages {
 
-        stage('Verify Environment') {
+        stage('Checkout') {
             steps {
-                sh 'echo $PATH'
-                sh 'which node'
-                sh 'which npm'
+                checkout scm
+            }
+        }
+
+        stage('Verify Node') {
+            steps {
                 sh 'node -v'
                 sh 'npm -v'
+            }
+        }
+
+        stage('Install Dependencies') {
+            steps {
+                sh 'npm install'
+            }
+        }
+
+        stage('Install Browsers') {
+            steps {
+                sh 'npx playwright install'
+            }
+        }
+
+        stage('Run Tests') {
+            steps {
+                sh 'npx playwright test'
             }
         }
     }
